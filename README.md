@@ -233,17 +233,28 @@ EEPROM             →  built-in
 # 1. Clone the repository
 git clone https://github.com/erendogan83/arduino-lcd-game-console.git
 
-# 2. Open in Arduino IDE
-#    File → Open → game_console.ino
+# 2. Install CH341 driver (Arduino Nano clone users — required!)
+#    Run CH341SER.EXE from the repo root and install the driver.
+#    Without this, your PC will not recognize the Nano clone via USB.
 
-# 3. Install LiquidCrystal_I2C via Library Manager
+# 3. Enable Serial Enumerator in Device Manager
+#    Device Manager → Ports (COM & LPT) → USB-SERIAL CH340 (COMx)
+#    → Right-click → Properties → Port Settings → Advanced
+#    → Check "Serial Enumerator"  ← required for stable COM port detection
 
-# 4. Board settings
+# 4. Open in Arduino IDE
+#    File → Open → game_console / game_console.ino
+
+# 5. Install LiquidCrystal_I2C via Library Manager
+
+# 6. Board settings  ← these are mandatory, not optional
 #    Board     : Arduino Nano
-#    Processor : ATmega328P (Old Bootloader)  ← if upload fails, try this
+#    Processor : ATmega328P (Old Bootloader)
 
-# 5. Select COM port → Upload
+# 7. Select the correct COM port → Upload
 ```
+
+> **⚠️ Clone Nano users:** Steps 2 and 3 are **mandatory**. Original Arduino Nanos use the FTDI chip and don't need the CH341 driver, but most affordable Nano clones use the CH340/CH341 chip. If your COM port disappears or upload fails, re-check the Serial Enumerator setting.
 
 ---
 
@@ -251,17 +262,26 @@ git clone https://github.com/erendogan83/arduino-lcd-game-console.git
 
 ```
 arduino-lcd-game-console/
-├── game_console.ino          # ← Main firmware: engine + all 5 games + menu
-├── endless_runner.ino        # Standalone endless runner (development version)
-├── snake.ino                 # Standalone snake (development version)
-├── reaction_game.ino         # Standalone reaction game (development version)
-├── whack_a_mole.ino          # Standalone whack-a-mole (development version)
-├── memory_game.ino           # Standalone memory game (development version)
-├── hardware_test.ino         # 6-stage hardware validation sketch
-├── photos/
+│
+├── game_console/             # Main firmware (engine + all 5 games + menu)
+│   └── game_console.ino
+│
+├── games/                    # Standalone versions of each game
+│   ├── endless_runner.ino
+│   ├── snake.ino
+│   ├── reaction_game.ino
+│   ├── whack_a_mole.ino
+│   └── memory_game.ino
+│
+├── hardware_test/            # 6-stage hardware validation sketch
+│   └── hardware_test.ino
+│
+├── photos/                   # Build photos
 │   ├── front.jpg
 │   ├── back.jpg
 │   └── battery.jpg
+│
+├── CH341SER.EXE              # CH340/CH341 USB driver for Arduino Nano clones
 └── README.md
 ```
 
