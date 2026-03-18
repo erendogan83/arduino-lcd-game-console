@@ -26,6 +26,21 @@
 
 ---
 
+💡 About This Project
+This project started as a simple question: how far can you push a 16×2 character LCD?
+Most people use these displays to show sensor readings or a blinking cursor. This project takes the same 32-character screen and turns it into a fully playable handheld game console — complete with custom sprites, sound effects, persistent high scores, and five distinct games, all running on an ATmega328P microcontroller with just 2KB of SRAM and 32KB of Flash.
+What makes it unique
+
+Extreme hardware constraints — a 16×2 LCD has no graphics mode. Every "pixel" is actually a character cell. Sprites are built using the HD44780's 8-slot CGRAM, and the entire rendering pipeline is custom-built from scratch.
+Zero flicker — a double-buffer system (cur / prv arrays) ensures only changed cells are written to the LCD on each frame. No lcd.clear(), no tearing, no visible updates.
+Non-blocking everything — all game logic runs on millis() delta timers. No delay() inside gameplay loops, keeping input response tight at all times.
+5 completely different game genres — dodge, navigate, reflex, speed, and memory — each with its own tutorial, difficulty curve, and EEPROM-persisted high score.
+Single-file architecture — the entire console fits in one game_console.ino. A shared engine layer handles rendering, input, LEDs, and EEPROM. Each game is a self-contained function.
+
+Why I built it
+I'm an Electrical & Electronics Engineer with a passion for embedded systems and constraint-driven design. This project is my take on what "minimal hardware, maximum fun" really means — not a simulation, not an emulator, but real games designed from the ground up for the most humble display imaginable.
+It's also a love letter to the era when developers had to be creative because the hardware gave them no other choice.
+
 ## 📸 Photos
 
 | Front | Back | Battery |
