@@ -26,7 +26,7 @@
 
 ---
 
-💡 About This Project
+## 💡 About This Project
 This project started as a simple question: how far can you push a 16×2 character LCD?
 Most people use these displays to show sensor readings or a blinking cursor. This project takes the same 32-character screen and turns it into a fully playable handheld game console — complete with custom sprites, sound effects, persistent high scores, and five distinct games, all running on an ATmega328P microcontroller with just 2KB of SRAM and 32KB of Flash.
 What makes it unique
