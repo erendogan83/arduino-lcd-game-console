@@ -1,7 +1,7 @@
 /*
  * Arduino LCD Game Console
  * Author  : Eren DOGAN
- * GitHub  : https://github.com/erendogan83/arduino-lcd-game-console
+ * GitHub  : github.com/erendogan83
  *
  * 5 games on a 16x2 I2C LCD with Arduino Nano.
  *
@@ -247,17 +247,7 @@ void runEndlessRunner(){
         if(er_bX<0) er_bActive=false;
       }
 
-      if(!er_hOn&&millis()-hTimer>8000UL){er_hOn=true;er_hX=14;er_hRow=random(2);hTimer=millis();}
-      if(er_hOn){
-        er_hX--;
-        if(er_hX<0){er_hOn=false;hTimer=millis();}
-        else if(er_hX==2&&er_hRow==er_pRow){
-          er_hOn=false;hTimer=millis();er_score+=10;er_spd=erGetSpd(er_score);
-          tone(PIN_BUZZ,2000,50);delay(60);tone(PIN_BUZZ,2200,100);flashNB(PIN_YELLOW,100);
-        }
-      }
-
-      // Collision check at player column (PCOL=2)
+      // Collision check FIRST — before heart, before score
       bool hitA=(er_aX==2&&er_aRow==er_pRow);
       bool hitB=(er_bActive&&er_bX==2&&er_bRow==er_pRow);
       if(hitA||hitB){
@@ -266,16 +256,29 @@ void runEndlessRunner(){
         er_aScored=false;er_aFlipped=false;er_bActive=false;
         if(er_lives<=0) dead=true;
       } else {
+        // No collision this tick — safe to check score and heart
+
         // Score: obstacle passed player column safely
         if(!er_aScored&&er_aX==1){
           er_score++;er_aScored=true;er_spd=erGetSpd(er_score);
-          if(er_score%10==0){tone(PIN_BUZZ,1800,50);delay(60);tone(PIN_BUZZ,2000,80);flashNB(PIN_GREEN,80);}
+          if(er_score%10==0){tone(PIN_BUZZ,1800,50);delay(60);tone(PIN_BUZZ,2000,80);flashNB(PIN_GREEN,80);lastTick=millis();}
           else{tone(PIN_BUZZ,1600,40);flashNB(PIN_GREEN,40);}
         }
         if(er_bActive&&!er_bScored&&er_bX==1){
           er_score++;er_bScored=true;er_spd=erGetSpd(er_score);
-          if(er_score%10==0){tone(PIN_BUZZ,1800,50);delay(60);tone(PIN_BUZZ,2000,80);flashNB(PIN_GREEN,80);}
+          if(er_score%10==0){tone(PIN_BUZZ,1800,50);delay(60);tone(PIN_BUZZ,2000,80);flashNB(PIN_GREEN,80);lastTick=millis();}
           else{tone(PIN_BUZZ,1600,40);flashNB(PIN_GREEN,40);}
+        }
+
+        // Heart pickup — only if no collision this tick
+        if(!er_hOn&&millis()-hTimer>8000UL){er_hOn=true;er_hX=14;er_hRow=random(2);hTimer=millis();}
+        if(er_hOn){
+          er_hX--;
+          if(er_hX<0){er_hOn=false;hTimer=millis();}
+          else if(er_hX==2&&er_hRow==er_pRow){
+            er_hOn=false;hTimer=millis();er_score+=10;er_spd=erGetSpd(er_score);
+            tone(PIN_BUZZ,2000,50);delay(60);tone(PIN_BUZZ,2200,100);flashNB(PIN_YELLOW,100);lastTick=millis();
+          }
         }
       }
       if(er_bActive&&er_aX>=0&&er_bX>=0&&abs(er_aX-er_bX)<2){er_bActive=false;tone(PIN_BUZZ,600,30);}
@@ -383,7 +386,7 @@ void runSnake(){
           sn_score+=5;
           int shrink=4; if(sn_length-shrink<3) shrink=sn_length-3;
           sn_length-=shrink; sn_turboActive=false;
-          tone(PIN_BUZZ,2000,60);delay(70);tone(PIN_BUZZ,2400,120);flashNB(PIN_YELLOW,200);
+          tone(PIN_BUZZ,2000,60);delay(70);tone(PIN_BUZZ,2400,120);flashNB(PIN_YELLOW,200);lastTick=millis();
           snPlaceFood(false);
         } else {
           sn_score++;
