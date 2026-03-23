@@ -1,7 +1,7 @@
 /*
  * Arduino LCD Game Console
  * Author  : Eren DOGAN
- * GitHub  : github.com/erendogan83
+ * GitHub  : https://github.com/erendogan83/arduino-lcd-game-console
  *
  * 5 games on a 16x2 I2C LCD with Arduino Nano.
  *
@@ -239,21 +239,11 @@ void runEndlessRunner(){
       lastTick=millis();
       er_aX--;
       if(er_score>=100&&!er_aFlipped&&er_aX>=5&&random(4)==0){er_aRow=1-er_aRow;er_aFlipped=true;tone(PIN_BUZZ,450,20);}
-      if(!er_aScored&&er_aX==1){
-        er_score++;er_aScored=true;er_spd=erGetSpd(er_score);
-        if(er_score%10==0){tone(PIN_BUZZ,1800,50);delay(60);tone(PIN_BUZZ,2000,80);flashNB(PIN_GREEN,80);}
-        else{tone(PIN_BUZZ,1600,40);flashNB(PIN_GREEN,40);}
-      }
       if(er_aX<0) erSpawnA();
 
       if(er_bActive){
         er_bX--;
         if(er_score>=100&&!er_bFlipped&&er_bX>=5&&random(4)==0){er_bRow=1-er_bRow;er_bFlipped=true;tone(PIN_BUZZ,450,20);}
-        if(!er_bScored&&er_bX==1){
-          er_score++;er_bScored=true;er_spd=erGetSpd(er_score);
-          if(er_score%10==0){tone(PIN_BUZZ,1800,50);delay(60);tone(PIN_BUZZ,2000,80);flashNB(PIN_GREEN,80);}
-          else{tone(PIN_BUZZ,1600,40);flashNB(PIN_GREEN,40);}
-        }
         if(er_bX<0) er_bActive=false;
       }
 
@@ -267,12 +257,26 @@ void runEndlessRunner(){
         }
       }
 
-      bool hit=(er_aX==2&&er_aRow==er_pRow)||(er_bActive&&er_bX==2&&er_bRow==er_pRow);
-      if(hit){
+      // Collision check at player column (PCOL=2)
+      bool hitA=(er_aX==2&&er_aRow==er_pRow);
+      bool hitB=(er_bActive&&er_bX==2&&er_bRow==er_pRow);
+      if(hitA||hitB){
         er_lives--;flashNB(PIN_RED,150);tone(PIN_BUZZ,300,200);
         er_aX=14;er_aRow=erPickRow();er_lastWasBot=(er_aRow==1);
         er_aScored=false;er_aFlipped=false;er_bActive=false;
         if(er_lives<=0) dead=true;
+      } else {
+        // Score: obstacle passed player column safely
+        if(!er_aScored&&er_aX==1){
+          er_score++;er_aScored=true;er_spd=erGetSpd(er_score);
+          if(er_score%10==0){tone(PIN_BUZZ,1800,50);delay(60);tone(PIN_BUZZ,2000,80);flashNB(PIN_GREEN,80);}
+          else{tone(PIN_BUZZ,1600,40);flashNB(PIN_GREEN,40);}
+        }
+        if(er_bActive&&!er_bScored&&er_bX==1){
+          er_score++;er_bScored=true;er_spd=erGetSpd(er_score);
+          if(er_score%10==0){tone(PIN_BUZZ,1800,50);delay(60);tone(PIN_BUZZ,2000,80);flashNB(PIN_GREEN,80);}
+          else{tone(PIN_BUZZ,1600,40);flashNB(PIN_GREEN,40);}
+        }
       }
       if(er_bActive&&er_aX>=0&&er_bX>=0&&abs(er_aX-er_bX)<2){er_bActive=false;tone(PIN_BUZZ,600,30);}
 
