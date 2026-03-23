@@ -41,6 +41,8 @@ Why I built it
 I'm an Electrical & Electronics Engineer with a passion for embedded systems and constraint-driven design. This project is my take on what "minimal hardware, maximum fun" really means — not a simulation, not an emulator, but real games designed from the ground up for the most humble display imaginable.
 It's also a love letter to the era when developers had to be creative because the hardware gave them no other choice.
 
+[![Wokwi Simulation](https://img.shields.io/badge/Wokwi-Simulate%20Online-green?logo=data:image/svg+xml;base64,PHN2Zy...)](https://wokwi.com/projects/459224412244300801)
+
 ## 📸 Photos
 
 | Front | Back | Battery |
@@ -268,7 +270,16 @@ git clone https://github.com/erendogan83/arduino-lcd-game-console.git
 
 # 7. Select the correct COM port → Upload
 ```
+---
 
+## 🔴 Live Simulation
+
+Try it directly in your browser — no hardware needed:
+
+**[▶ Run on Wokwi](https://wokwi.com/projects/459224412244300801)**
+
+
+> Full simulation including LCD display, buttons, LEDs, and buzzer.
 > **⚠️ Clone Nano users:** Steps 2 and 3 are **mandatory**. Original Arduino Nanos use the FTDI chip and don't need the CH341 driver, but most affordable Nano clones use the CH340/CH341 chip. If your COM port disappears or upload fails, re-check the Serial Enumerator setting.
 
 ---
